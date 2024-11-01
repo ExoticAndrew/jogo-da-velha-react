@@ -1,0 +1,200 @@
+jsx
+
+
+
+import React, { useState } from 'react';
+import icone from './assets/icon.webp';
+
+function TodoList() {
+    const listastorage = localStorage.getItem('lista');
+    const [lista, setLista] = useState(listastorage ? JSON.parse(listastorage) : []);
+    const [novoItem, setNovoItem] = useState("");
+
+    function adicionarItem(form) {
+        form.preventDefault();
+        if (!novoItem) return;
+        setLista([...lista, { text: novoItem, isCompleted: false }]);
+        setNovoItem("");
+        document.getElementById('input-entrada').focus();
+    }
+
+    function clicou(index) {
+        const listaAux = [...lista];
+        listaAux[index].isCompleted = !listaAux[index].isCompleted;
+        setLista(listaAux);
+    }
+
+    function deletar(index) {
+        const listaAux = [...lista];
+        listaAux.splice(index, 1);
+        setLista(listaAux);
+    }
+
+    return (
+        <div>
+            <h1>Lista de Tarefas</h1>
+            <form onSubmit={adicionarItem}>
+                <input
+                    id="input-entrada"
+                    type="text"
+                    placeholder="Adicione uma tarefa"
+                    onChange={(e) => setNovoItem(e.target.value)}
+                    value={novoItem}
+                />
+                <div className='listaTarefas'>
+                    {lista.length < 1 ? (
+                        <div style={{ textAlign: 'center' }}>
+                            <img className="iconeCentral" src={icone} alt="Ícone" />
+                        </div>
+                    ) : (
+                        lista.map((item, index) => (
+                            <div key={index} className={item.isCompleted ? "item completo" : "item"}>
+                                <span onClick={() => clicou(index)}>{item.text}</span>
+                                <button className="del" onClick={() => deletar(index)}>Deletar</button>
+                            </div>
+                        ))
+                    )}
+                </div>
+            </form>
+        </div>
+    );
+}
+
+export default TodoList;
+
+CSS
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+body{
+    background: #444f44;
+    font-family: roboto, sans-serif;
+}
+
+*:focus{
+    outline: none;
+}
+h1{
+font-weight: 900;
+color: #7d83b9;
+text-align: center;
+}
+
+form{
+    display: flex;
+    position: relative;
+    width: 600;
+    height: 60;
+    margin:30px auto;
+    margin-bottom: 60px;
+    background: red;
+}
+input{
+    display: flex;
+    width: 100%;
+    height: 60px;
+    background: #2d3045;
+    border: none;
+    padding-left: 30px;
+    font-size: 16px;
+    border-radius: 10px;
+    color: #fff;
+}
+button.add{
+    position: absolute;
+    top: 0%;
+    right: 0%;
+    background: #363b65;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 10px 25px;
+    height: 60px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+
+
+}
+button.add:hover{
+    color: white;
+    background-color: #363f88;
+
+
+
+}
+.listatarefas{
+    display: flex;
+    justify-content: center;
+    flex-flow: column wrap;
+    width: 600px;
+    margin: auto;
+    background: red;
+
+
+}
+.item{
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #363b65;
+    margin-bottom: 10px;
+    cursor: pointer;
+
+}
+.item:hover{
+
+    background: black;
+}
+.item span{
+    text-align: start;
+    width: 100%;
+    color: white;
+    margin-right: 10px;
+    padding: 10px 15px;
+}
+.item.completo{
+    display: flex;
+    justify-content: space-between;
+    background: #1e1f2e;
+    border: none;
+    margin-bottom: 10px;
+    cursor: pointer;
+
+}
+.item.completo span{
+    width: 100%;
+    color: #4d506e;
+    margin-right: 10px;
+    padding: 10px 15px;
+    text-decoration:line-through;
+    opacity: 0.9;
+}
+button.del:hover{
+    background: #ff004c;
+    border: none;
+    color: white;
+    padding: 15px;
+    cursor: pointer;
+}
+button.deleteall{
+    border: 1px solid red;
+    background: none;
+    padding: 15px;
+    color: red;
+    font-weight: bold;
+    border-radius: 5px;
+
+
+}
+button.delete.all:hover{
+    border: 1px solid red;
+    background: red;
+    color: white;
+    cursor: pointer;
+}
+@media screen and (Max-width: 900px){
+    form{
+        width: 100%;
+    }
+}
+    
